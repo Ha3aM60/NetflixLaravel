@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Directors;
 use Illuminate\Http\Request;
-use App\Http\Requests\Directors\StoreRequest;
-use App\Http\Requests\Directors\UpdateRequest;
 use Illuminate\Support\Facades\Validator;
 
 class DirectorController extends Controller

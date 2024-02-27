@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenreController;
 use Illuminate\Http\Request;
@@ -37,5 +38,15 @@ Route::group([
     Route::post('/store', [GenreController::class, 'store']);
     Route::post('/update', [GenreController::class, 'update']);
     Route::post('/delete', [GenreController::class, 'delete']);
+
+});
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'actors'
+], function () {
+    Route::get('/index', [ActorController::class, 'index']);
+    Route::post('/store', [ActorController::class, 'store']);
+    Route::post('/update', [ActorController::class, 'update']);
+    Route::post('/delete', [ActorController::class, 'delete']);
 
 });

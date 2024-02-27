@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Genre;
 use Illuminate\Http\Request;
-use App\Http\Requests\Genre\StoreRequest;
-use App\Http\Requests\Genre\UpdateRequest;
 use Illuminate\Support\Facades\Validator;
 
 
