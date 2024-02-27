@@ -3,52 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Directors;
 use Illuminate\Http\Request;
+use App\Http\Requests\Directors\StoreRequest;
+use App\Http\Requests\Directors\UpdateRequest;
+use Illuminate\Support\Facades\Validator;
 
 class DirectorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete']]);
+    }
+
     public function index()
     {
-        $directors = Directors::all();
-        return view('directors.index', compact('directors'));
+        $directors = Directors::get();
+        return response()->json($directors, 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'placeOfBirth' => 'required',
-            'birthday' => 'required|date',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'image' => 'nullable|string',
+            'placeOfBirth' => 'nullable|string',
+            'birthday' => 'nullable|string'
         ]);
-
-        $imageName = time().'.'.$request->image->extension();
-        $request->image->move(public_path('images'), $imageName);
-
-        Directors::create([
-            'name' => $request->name,
-            'image' => $imageName,
-            'placeOfBirth' => $request->placeOfBirth,
-            'birthday' => $request->birthday,
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $director = Directors::create([
+            'name' => $request['name'],
+            'image' => $request['image'],
+            'placeOfBirth' => $request['placeOfBirth'],
+            'birthday' => $request['birthday'],
         ]);
-
-        return redirect()->route('directors.index')
-            ->with('success', 'Director created successfully.');
+        return response()->json($director);
     }
 
-    public function edit($id)
+    public function update(Request $request)
     {
-        $director = Directors::findOrFail($id);
-
-        return view('directors.edit', compact('director'));
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'image' => 'nullable|string',
+            'placeOfBirth' => 'nullable|string',
+            'birthday' => 'nullable|string'
+        ]);
+        $director = Directors::where("id",$request["id"])->first();
+        $director->update($validatedData);
+        return response()->json(['message'=>'Complete!'],200);
     }
 
-    public function destroy($id)
+    public function delete(Request $request)
     {
-        $director = Directors::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|int'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $director = Directors::where("id",$request["id"])->first();
         $director->delete();
-
-        return redirect()->route('directors.index')
-            ->with('success', 'Director deleted successfully.');
+        return response()->json(['message'=>'Complete!'],200);
     }
 }
