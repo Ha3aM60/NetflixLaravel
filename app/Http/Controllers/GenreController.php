@@ -3,40 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Genre;
 use Illuminate\Http\Request;
+use App\Http\Requests\Genre\StoreRequest;
+use App\Http\Requests\Genre\UpdateRequest;
+use Illuminate\Support\Facades\Validator;
+
 
 class GenreController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete']]);
+    }
+
     public function index()
     {
-        $genres = Genre::all();
-        return view('genres.index', compact('genres'));
+        $genre = Genre::get();
+        return response()->json($genre, 200);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:genres|max:255',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string'
         ]);
-
-        Genre::create($request->all());
-
-        return redirect()->route('genres.index')
-            ->with('success', 'Genre created successfully.');
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $item= Genre::create([
+            'name'=>$request['name'],
+        ]);
+        return response()->json($item);
     }
 
-    public function edit($id)
+    public function update(Request $request)
     {
-        $genre = Genre::findOrFail($id);
-
-        return view('genres.edit', compact('genre'));
+        $validatedData = $request->validate([
+            'name' => 'required|string'
+        ]);
+        $itemUpdate = Genre::where("id",$request["id"])->first();
+        $itemUpdate->update($validatedData);
+        return response()->json(['message'=>'Complete!'],200);
     }
-    public function destroy($id)
+    public function delete(Request $request)
     {
-        $genre = Genre::findOrFail($id);
-        $genre->delete();
-
-        return redirect()->route('genres.index')
-            ->with('success', 'Genre deleted successfully.');
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|int'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $itemDelete = Genre::where("id",$request["id"])->first();
+        $itemDelete ->delete();
+        return response()->json(['message'=>'Complete!'],200);
     }
 }
