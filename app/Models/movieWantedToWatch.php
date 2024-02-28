@@ -9,7 +9,7 @@ class movieWantedToWatch extends Model
 {
     protected $fillable = [
         'userId',
-        'movieId',
+        'moviesId',
     ];
 
     use HasFactory;
