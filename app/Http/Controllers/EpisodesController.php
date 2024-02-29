@@ -2,49 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\actorMovies;
+use App\Models\Episode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-class ActorMoviesController extends Controller
+
+class EpisodesController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['index','store','update', 'delete']]);
     }
-
     public function index()
     {
-        $actorMoviesData = DB::table('actor_movies')
-            ->select('actor_movies.*', 'actors.name as actors_name', 'movies.title as movie_title')
-            ->join('actors', 'actor_movies.actorId', '=', 'actors.id')
-            ->join('movies', 'actor_movies.movieId', '=', 'movies.id')
-            ->get();
-        return response()->json($actorMoviesData, 200);
+        $movies = Episode::get();
+        return response()->json($movies, 200);
     }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'moviesId' => 'required|int',
-            'actorId' => 'required|int'
+            'seasonId' => 'required|int',
+            'path' => 'required|string',
+            'description' => 'required|string',
+            'title' => 'required|string',
+            'time' => 'required|string'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-        $item= actorMovies::create([
-            'moviesId'=>$request['moviesId'],
-            'actorId'=>$request['actorId']
+        $item= Episode::create([
+            'seasonId'=>$request['seasonId'],
+            'path'=>$request['path'],
+            'description'=>$request['description'],
+            'title'=>$request['title'],
+            'time'=>$request['time']
         ]);
         return response()->json($item);
     }
-
     public function update(Request $request)
     {
         $validatedData = $request->validate([
-            'actorId' => 'required|string'
+            'seasonId' => 'required|int',
+            'path' => 'required|string',
+            'description' => 'required|int',
+            'title' => 'required|string',
+            'time' => 'required|string'
         ]);
-        $itemUpdate = actorMovies::where("id",$request["id"])->first();
+        $itemUpdate = Episode::where("id",$request["id"])->first();
         $itemUpdate->update($validatedData);
         return response()->json(['message'=>'Complete!'],200);
     }
@@ -56,7 +59,7 @@ class ActorMoviesController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-        $itemDelete = actorMovies::where("id",$request["id"])->first();
+        $itemDelete = Episode::where("id",$request["id"])->first();
         $itemDelete ->delete();
         return response()->json(['message'=>'Complete!'],200);
     }
