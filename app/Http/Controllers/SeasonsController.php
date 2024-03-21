@@ -21,7 +21,7 @@ class SeasonsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'year' => 'required|string',
-            'number' => 'required|string',
+            'number' => 'required|int',
             'serialId' => 'required|int',
             'title' => 'required|string'
         ]);
@@ -40,7 +40,7 @@ class SeasonsController extends Controller
     {
         $validatedData = $request->validate([
             'year' => 'required|string',
-            'number' => 'required|string',
+            'number' => 'required|int',
             'serialId' => 'required|int',
             'title' => 'required|string'
         ]);

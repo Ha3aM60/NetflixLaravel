@@ -65,7 +65,7 @@ class MoviesController extends Controller
     }
     public function update(Request $request)
     {
-        $item = $request->validate([
+        $validatedData = $request->validate([
             'country' => 'required|string',
             'description' => 'required|string',
             'slug' => 'required|string',
@@ -101,15 +101,6 @@ class MoviesController extends Controller
         ]);
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
-        }
-        $imagePath = public_path('uploads/' . $request["image"]);
-
-        if (Storage::disk('public')->exists($request["image"])) {
-            Storage::disk('public')->delete($request["image"]);
-        } elseif (file_exists($imagePath)) {
-            unlink($imagePath);
-        } else {
-            return response()->json(['message' => 'Missing file'], 422);
         }
         $itemDelete = Movies::where("id",$request["id"])->first();
         $itemDelete ->delete();

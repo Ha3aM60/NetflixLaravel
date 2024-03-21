@@ -26,14 +26,14 @@ class ActorMoviesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'moviesId' => 'required|int',
+            'movieId' => 'required|int',
             'actorId' => 'required|int'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
         $item= actorMovies::create([
-            'moviesId'=>$request['moviesId'],
+            'movieId'=>$request['movieId'],
             'actorId'=>$request['actorId']
         ]);
         return response()->json($item);

@@ -43,7 +43,7 @@ class EpisodesController extends Controller
         $validatedData = $request->validate([
             'seasonId' => 'required|int',
             'path' => 'required|string',
-            'description' => 'required|int',
+            'description' => 'required|string',
             'title' => 'required|string',
             'time' => 'required|string'
         ]);

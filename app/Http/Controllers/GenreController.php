@@ -35,25 +35,26 @@ class GenreController extends Controller
         return response()->json($item);
     }
 
-    public function update(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string'
-        ]);
-        $itemUpdate = Genre::where("id",$request["id"])->first();
-        $itemUpdate->update($validatedData);
-        return response()->json(['message'=>'Complete!'],200);
+    public function update(Request $request, $id)
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string'
+    ]);
+    $itemUpdate = Genre::find($id);
+    if (!$itemUpdate) {
+        return response()->json(['message' => 'Genre not found'], 404);
     }
-    public function delete(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|int'
-        ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        $itemDelete = Genre::where("id",$request["id"])->first();
-        $itemDelete ->delete();
-        return response()->json(['message'=>'Complete!'],200);
+    $itemUpdate->update($validatedData);
+    return response()->json(['message' => 'Complete!'], 200);
+}
+
+    public function delete($id)
+{
+    $itemDelete = Genre::find($id);
+    if (!$itemDelete) {
+        return response()->json(['error' => 'Genre not found'], 404);
     }
+    $itemDelete->delete();
+    return response()->json(['message' => 'Genre deleted successfully'], 200);
+}
 }

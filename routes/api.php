@@ -4,6 +4,7 @@ use App\Http\Controllers\ActorController;
 use App\Http\Controllers\ActorMoviesController;
 use App\Http\Controllers\ActorSerialsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DirectorController;
 use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GenreMoviesController;
@@ -48,8 +49,18 @@ Route::group([
 ], function () {
     Route::get('/index', [GenreController::class, 'index']);
     Route::post('/store', [GenreController::class, 'store']);
-    Route::post('/update', [GenreController::class, 'update']);
-    Route::post('/delete', [GenreController::class, 'delete']);
+    Route::post('/update/{id}', [GenreController::class, 'update']);
+    Route::post('/delete/{id}', [GenreController::class, 'delete']);
+
+});
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'directors'
+], function () {
+    Route::get('/index', [DirectorController::class, 'index']);
+    Route::post('/store', [DirectorController::class, 'store']);
+    Route::post('/update', [DirectorController::class, 'update']);
+    Route::post('/delete', [DirectorController::class, 'delete']);
 
 });
 Route::group([
