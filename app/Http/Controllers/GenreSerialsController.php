@@ -12,7 +12,7 @@ class GenreSerialsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete']]);
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByGenre']]);
     }
     public function index()
     {
@@ -22,6 +22,11 @@ class GenreSerialsController extends Controller
             ->join('serials', 'genre_serials.serialsId', '=', 'serials.id')
             ->get();
         return response()->json($genreMoviesData, 200);
+    }
+    public static function searchByGenre($genreId)
+    {
+        $limit =10;
+        return genreSerials::where('genreId', 'like', '%' . $genreId . '%')->limit($limit)->get();
     }
     public function store(Request $request)
     {

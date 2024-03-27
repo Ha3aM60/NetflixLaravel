@@ -12,13 +12,18 @@ class MoviesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete']]);
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByTitle']]);
     }
 
     public function index()
     {
         $movies = Movies::get();
         return response()->json($movies, 200);
+    }
+    public static function searchByTitle($title)
+    {
+        $limit = 10;
+        return Movies::where('title', 'like', '%' . $title . '%')->limit($limit)->get();
     }
     public function store(Request $request)
     {

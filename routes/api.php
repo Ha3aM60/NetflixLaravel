@@ -82,7 +82,7 @@ Route::group([
     Route::post('/store', [GenreMoviesController::class, 'store']);
     Route::post('/update', [GenreMoviesController::class, 'update']);
     Route::post('/delete', [GenreMoviesController::class, 'delete']);
-
+    Route::get('/searchByGenre/{genreId}', [GenreMoviesController::class, 'searchByGenre']);
 });
 
 Route::group([
@@ -123,6 +123,7 @@ Route::group([
     Route::post('/store', [MoviesController::class, 'store']);
     Route::post('/update', [MoviesController::class, 'update']);
     Route::post('/delete', [MoviesController::class, 'delete']);
+    Route::get('/searchByTitle/{title}', [MoviesController::class, 'searchByTitle']);
 
 });
 Route::group([
@@ -133,6 +134,7 @@ Route::group([
     Route::post('/store', [SerialsController::class, 'store']);
     Route::post('/update', [SerialsController::class, 'update']);
     Route::post('/delete', [SerialsController::class, 'delete']);
+    Route::get('/searchByTitle/{title}', [SerialsController::class, 'searchByTitle']);
 
 });
 Route::group([
@@ -153,18 +155,9 @@ Route::group([
     Route::post('/store', [GenreSerialsController::class, 'store']);
     Route::post('/update', [GenreSerialsController::class, 'update']);
     Route::post('/delete', [GenreSerialsController::class, 'delete']);
-
+    Route::get('/searchByGenre/{genreId}', [GenreSerialsController::class, 'searchByGenre']);
 });
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'genreSerials'
-], function () {
-    Route::get('/index', [GenreSerialsController::class, 'index']);
-    Route::post('/store', [GenreSerialsController::class, 'store']);
-    Route::post('/update', [GenreSerialsController::class, 'update']);
-    Route::post('/delete', [GenreSerialsController::class, 'delete']);
 
-});
 Route::group([
     'middleware' => 'api',
     'prefix' => 'serialsWantedToWatch'

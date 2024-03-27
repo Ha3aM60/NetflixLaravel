@@ -12,12 +12,17 @@ class SerialsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete']]);
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByTitle']]);
     }
     public function index()
     {
         $movies = Serial::get();
         return response()->json($movies, 200);
+    }
+    public static function searchByTitle($title)
+    {
+        $limit = 10;
+        return Serial::where('title', 'like', '%' . $title . '%')->limit($limit)->get();
     }
     public function store(Request $request)
     {
