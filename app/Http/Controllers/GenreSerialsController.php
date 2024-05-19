@@ -17,7 +17,7 @@ class GenreSerialsController extends Controller
     public function index()
     {
         $genreMoviesData = DB::table('genre_serials')
-            ->select('genre_serials.*', 'genres.name as genre_name', 'serials.title as serial_title')
+            ->select('genre_serials.*', 'genres.name as genre_name', 'serials.title as serial_title', 'serials.image')
             ->join('genres', 'genre_serials.genreId', '=', 'genres.id')
             ->join('serials', 'genre_serials.serialsId', '=', 'serials.id')
             ->get();

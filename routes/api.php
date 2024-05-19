@@ -124,6 +124,7 @@ Route::group([
     Route::post('/update', [MoviesController::class, 'update']);
     Route::post('/delete', [MoviesController::class, 'delete']);
     Route::get('/searchByTitle/{title}', [MoviesController::class, 'searchByTitle']);
+    Route::get('/searchById/{id}', [MoviesController::class, 'searchById']);
 
 });
 Route::group([

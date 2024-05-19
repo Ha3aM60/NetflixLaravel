@@ -12,7 +12,7 @@ class MoviesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByTitle']]);
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByTitle','searchById']]);
     }
 
     public function index()
@@ -24,6 +24,11 @@ class MoviesController extends Controller
     {
         $limit = 10;
         return Movies::where('title', 'like', '%' . $title . '%')->limit($limit)->get();
+    }
+    public static function searchById($id)
+    {
+        $limit = 1;
+        return Movies::where('id', 'like', '%' . $id . '%')->limit($limit)->get();
     }
     public function store(Request $request)
     {
@@ -41,6 +46,8 @@ class MoviesController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
+
+
         if (!$request->has('image')) {
             return response()->json(['message' => 'Missing file'], 422);
         }
@@ -55,6 +62,17 @@ class MoviesController extends Controller
         $fileSave = $basePath . '/' . $filename;
         ImageHelper::image_resize(700, 700, $fileSave, 'image');
         $input["image"] = $year . '/' . $month . '/' . $filename;
+
+
+        if (!$request->has('video')) {
+            return response()->json(['message' => 'Missing video file'], 422);
+        }
+    
+        $videoFilename = uniqid() . '.' . $request->file("video")->getClientOriginalExtension();
+        $videoSavePath = $basePath . '/' . $videoFilename;
+        $request->file('video')->move($basePath, $videoFilename);
+        $input["video"] = $year . '/' . $month . '/' . $videoFilename;
+
         $item= Movies::create([
             'country'=>$request['country'],
             'description'=>$request['description'],
@@ -64,7 +82,8 @@ class MoviesController extends Controller
             'title'=>$request['title'],
             'directorId'=>$request['directorId'],
             'age'=>$request['age'],
-            'year'=>$request['year']
+            'year'=>$request['year'],
+            'video' => $input["video"]
         ]);
         return response()->json($item);
     }
