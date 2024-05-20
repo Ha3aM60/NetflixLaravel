@@ -40,6 +40,8 @@ class SerialsController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
+
+
         if (!$request->has('image')) {
             return response()->json(['message' => 'Missing file'], 422);
         }
@@ -54,6 +56,17 @@ class SerialsController extends Controller
         $fileSave = $basePath . '/' . $filename;
         ImageHelper::image_resize(700, 700, $fileSave, 'image');
         $input["image"] = $year . '/' . $month . '/' . $filename;
+
+
+        if (!$request->has('video')) {
+            return response()->json(['message' => 'Missing video file'], 422);
+        }
+    
+        $videoFilename = uniqid() . '.' . $request->file("video")->getClientOriginalExtension();
+        $videoSavePath = $basePath . '/' . $videoFilename;
+        $request->file('video')->move($basePath, $videoFilename);
+        $input["video"] = $year . '/' . $month . '/' . $videoFilename;
+
         $item= Serial::create([
             'country'=>$request['country'],
             'description'=>$request['description'],
@@ -63,7 +76,8 @@ class SerialsController extends Controller
             'title'=>$request['title'],
             'directorId'=>$request['directorId'],
             'age'=>$request['age'],
-            'year'=>$request['year']
+            'year'=>$request['year'],
+            'video' => $input["video"]
         ]);
         return response()->json($item);
     }

@@ -17,7 +17,8 @@ class Serial extends Model
         'title',
         'directorId',
         'age',
-        'year'
+        'year',
+        'video'
     ];
 
     use HasFactory;
