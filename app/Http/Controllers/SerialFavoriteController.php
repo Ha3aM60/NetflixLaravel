@@ -23,9 +23,7 @@ class SerialFavoriteController extends Controller
             $serialAll[] = $wanted;
         }
 
-        return response()->json([
-            'serials' => $serialAll
-        ]);
+        return response()->json($serialAll, 200);
     }
     public function store(Request $request)
     {

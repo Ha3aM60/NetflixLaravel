@@ -12,7 +12,7 @@ class SerialsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByTitle']]);
+        $this->middleware('auth:api', ['except' => ['index','store','update', 'delete','searchByTitle','searchById']]);
     }
     public function index()
     {
@@ -23,6 +23,11 @@ class SerialsController extends Controller
     {
         $limit = 10;
         return Serial::where('title', 'like', '%' . $title . '%')->limit($limit)->get();
+    }
+    public static function searchById($id)
+    {
+        $limit = 1;
+        return Serial::where('id', 'like', '%' . $id . '%')->limit($limit)->get();
     }
     public function store(Request $request)
     {

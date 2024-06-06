@@ -136,6 +136,7 @@ Route::group([
     Route::post('/update', [SerialsController::class, 'update']);
     Route::post('/delete', [SerialsController::class, 'delete']);
     Route::get('/searchByTitle/{title}', [SerialsController::class, 'searchByTitle']);
+    Route::get('/searchById/{id}', [SerialsController::class, 'searchById']);
 
 });
 Route::group([

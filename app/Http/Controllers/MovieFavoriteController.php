@@ -23,9 +23,7 @@ class MovieFavoriteController extends Controller
             $moviesAll[] = $wanted;
         }
 
-        return response()->json([
-            'movies' => $moviesAll
-        ]);
+        return response()->json($moviesAll, 200);
     }
     public function store(Request $request)
     {
